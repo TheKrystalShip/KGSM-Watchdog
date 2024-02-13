@@ -25,6 +25,28 @@
                 "isDefault": true,
                 "kind": "build"
             }
+        },
+        {
+            "type": "shell",
+            "label": "Release",
+            "command": "/usr/bin/gcc",
+            "args": [
+                "-std=gnu99",
+                "-g",
+                "${file}",
+                "-m64",
+                "-O3",
+                "-Wall",
+                "-o",
+                "${fileDirname}/bin/${fileBasenameNoExtension}"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build"
         }
     ]
 }
