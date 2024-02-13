@@ -118,7 +118,7 @@ void publish(const char *serviceName, const int newStatus)
     snprintf(routingKeyBuffer, sizeof(routingKeyBuffer), "--routing-key=\"%s\"", RABBITMQ_ROUTING_KEY);
 
     char jsonMessageBodyBuffer[BUFSIZE64]; // Adjusted size
-    snprintf(jsonMessageBodyBuffer, sizeof(jsonMessageBodyBuffer), "{\"service\":\"%s\",\"status\":%d}", serviceName, newStatus);
+    snprintf(jsonMessageBodyBuffer, sizeof(jsonMessageBodyBuffer), "{'service':'%s','status':%d}", serviceName, newStatus);
 
     char bodyBuffer[BUFSIZE64 + 16];
     snprintf(bodyBuffer, sizeof(bodyBuffer), "--body=\"%s\"", jsonMessageBodyBuffer);
