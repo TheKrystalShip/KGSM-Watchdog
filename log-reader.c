@@ -37,7 +37,6 @@ int main(int argc, char *argv[])
     int pipefd[2];
     FILE *output;
     char line[512];
-    int status;
 
     pipe(pipefd); // create a pipe
     pid = fork(); // spawn a child process
@@ -57,21 +56,34 @@ int main(int argc, char *argv[])
 
     printf("%s log reader started with PID %d\n", service.name, getpid());
 
+    char *match = NULL;
+    int status = 0;
+    int previousStatus = status;
+
     // listen to what the process writes to stdout
     while (fgets(line, sizeof(line), output))
     {
-
+        match = strstr(line, service.onlineString);
         // Check for "online" pattern match
-        if (strstr(line, service.onlineString) != NULL)
+        if (match != NULL)
         {
-            publish(service.name, 1);
+            status = 1;
         }
 
+        match = strstr(line, service.offlineString);
         // Check for "offline" pattern match
-        if (strstr(line, service.offlineString) != NULL)
+        if (match != NULL)
         {
-            publish(service.name, 0);
+            status = 0;
         }
+
+        // Avoid spamming same status
+        if (status == previousStatus)
+            continue;
+
+        publish(service.name, status);
+        previousStatus = status;
+        match = NULL;
 
         // if you need to kill the tail application, just kill it:
         // if (something_goes_wrong)
@@ -79,7 +91,7 @@ int main(int argc, char *argv[])
     }
 
     // Wait for the child process to terminate
-    waitpid(pid, &status, 0);
+    waitpid(pid, NULL, 0);
 
     return EXIT_SUCCESS;
 }
