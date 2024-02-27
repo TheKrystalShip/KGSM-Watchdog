@@ -1,11 +1,25 @@
 # log-reader
 
-A simple program written in C that reads live data from `journalctl` and searches for a string pattern match in order to launch events at RabbitMQ.
+Threaded `journalctl` reader and event sender.
 
-Made purely because the bash script I had in place that did the exact same thing was using 15-20% CPU and was also falling behind the logs of some very verbose services.
+## Building
 
-Use at your own risk etc etc.
+Run `make`
 
-# Building
+## Running
 
-Build with `gcc`. There's only one file and it uses system libraries. Default build task for VSCode already set up.
+The `main` binary is in the `output` folder, the first parameter must be the path to a `.csv` file with the following format:
+
+```
+SERVICE NAME;ONLINE STRING TRIGGER;OFFLINE STRING TRIGGER
+```
+
+## License
+
+Copyright 2024 TheKrystalShip
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
