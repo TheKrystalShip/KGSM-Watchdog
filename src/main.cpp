@@ -1,11 +1,10 @@
-#include "queue.h"
-#include "csv.h"
+#include <TKS/Parsers/csv.h>
+#include <TKS/ConcurrentQueue.hpp>
 
 #include <iostream>
 #include <string>
 #include <array>
 #include <format>
-
 #include <chrono>
 #include <thread>
 #include <vector>
@@ -14,11 +13,11 @@
 #define JOURNALCTL_COMMAND "/usr/bin/journalctl -fqn0 -o cat -u "
 #define INIT_STATUS -1
 
-typedef TKS::Parsers::CSV::Row csv_row;
-typedef TKS::Concurrency::ConcurrentQueue<std::string> cc_string_q;
+typedef TKS::Parsers::CSV::Row csv_row_t;
+typedef TKS::Concurrency::ConcurrentQueue<std::string> cq_string_t;
 
-int initReaderThread(cc_string_q &m_queue, csv_row const &row);
-int initPublisherThread(cc_string_q &m_queue);
+int initReaderThread(cq_string_t &_queue, csv_row_t const &row);
+int initPublisherThread(cq_string_t &_queue);
 
 int main(int argc, char *argv[])
 {
@@ -36,7 +35,7 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
-    cc_string_q m_queue;
+    cq_string_t _queue;
     std::ifstream file(fileName);
 
     // Reader threads
@@ -44,14 +43,15 @@ int main(int argc, char *argv[])
     for (auto row : TKS::Parsers::CSV::Range(file))
     {
         threads.push_back(std::thread(
-            [&m_queue, row]()
-            { initReaderThread(m_queue, row); }));
+            [&_queue, row]()
+            { initReaderThread(_queue, row); }));
     }
 
     // Publisher thread
-    std::thread publisherThread = std::thread(
-        [&m_queue]()
-        { initPublisherThread(m_queue); });
+    std::thread publisherThread(
+        [&_queue]()
+        { initPublisherThread(_queue); }
+    );
 
     std::cout << "Threads created, listening for output\n";
 
@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
     return EXIT_SUCCESS;
 }
 
-int initReaderThread(cc_string_q &m_queue, csv_row const &row)
+int initReaderThread(cq_string_t &_queue, csv_row_t const &row)
 {
     const std::string_view serviceName{row[0]};
 
@@ -100,7 +100,7 @@ int initReaderThread(cc_string_q &m_queue, csv_row const &row)
                                    std::to_string(status)));
         message.append("}\'");
 
-        m_queue.push(message);
+        _queue.push(message);
 
         previousStatus = status;
     }
@@ -110,7 +110,7 @@ int initReaderThread(cc_string_q &m_queue, csv_row const &row)
     return EXIT_SUCCESS;
 }
 
-int initPublisherThread(cc_string_q &m_queue)
+int initPublisherThread(cq_string_t &_queue)
 {
     char *rabbitMqUri = std::getenv("STATUS_WATCHDOG_RABBITMQ_URI");
     char *rabbitMqRoutingKey = std::getenv("STATUS_WATCHDOG_RABBITMQ_ROUTING_KEY");
@@ -123,9 +123,10 @@ int initPublisherThread(cc_string_q &m_queue)
 
     while (true)
     {
-        // m_queue.pop() blocks until the queue is not empty
-        std::string message = m_queue.pop();
+        // _queue.pop() blocks until the queue is not empty
+        std::string message = _queue.front();
         std::cout << message << std::endl;
+        _queue.pop();
 
         std::string fullCommand = std::format(
             "{} --uri={} --exchange={} --routing-key={} --body=",
