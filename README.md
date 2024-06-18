@@ -1,4 +1,4 @@
-# log-reader
+# KGSM-Watchdog
 
 Threaded `journalctl` reader and event sender.
 

@@ -84,7 +84,7 @@
         {
             "label": "deploy",
             "type": "shell",
-            "command": "cp output/main /usr/local/bin/log-reader",
+            "command": "cp output/main /usr/local/bin/kgsm-watchdog",
             "problemMatcher": []
         }
     ]

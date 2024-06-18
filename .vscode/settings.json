@@ -1,8 +1,8 @@
 {
     "makefile.launchConfigurations": [
         {
-            "cwd": "/home/cristian/Repos/log-reader/output",
-            "binaryPath": "/home/cristian/Repos/log-reader/output/main",
+            "cwd": "/home/cristian/Repos/kgsm-watchdog/output",
+            "binaryPath": "/home/cristian/Repos/kgsm-watchdog/output/main",
             "binaryArgs": []
         }
     ]
