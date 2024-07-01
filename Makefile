@@ -15,7 +15,7 @@ CXXFLAGS	:= -std=c++20 -Wextra -g -lcsv -Wl,-rpath=/usr/local/lib
 LFLAGS = -L/usr/local/lib
 
 # define output directory
-OUTPUT	:= output
+OUTPUT	:= bin
 
 # define source directory
 SRC		:= src

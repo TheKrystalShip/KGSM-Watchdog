@@ -8,14 +8,12 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${fileDirname}/bin/${fileBasenameNoExtension}",
+            "program": "${workspaceRoot}/bin/main",
             "args": [
-                "SERVICE_NAME",
-                "ONLINE_STRING_PATTERN",
-                "OFFLINE_STRING_PATTERN"
+                "${workspaceRoot}/bin/services.csv"
             ],
             "stopAtEntry": false,
-            "cwd": "${fileDirname}",
+            "cwd": "${workspaceRoot}",
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
@@ -26,12 +24,12 @@
                     "ignoreFailures": true
                 },
                 {
-                    "description": "Set Disassembly Flavor to Intel",
-                    "text": "-gdb-set disassembly-flavor intel",
+                    "description": "Set Disassembly Flavor to AMD",
+                    "text": "-gdb-set disassembly-flavor amd",
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "C/C++: gcc build active file"
+            "preLaunchTask": "build"
         }
     ]
 }

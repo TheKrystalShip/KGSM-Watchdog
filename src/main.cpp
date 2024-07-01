@@ -1,5 +1,5 @@
-#include <TKS/Parsers/csv.h>
-#include <TKS/ConcurrentQueue.hpp>
+#include "CSV.h"
+#include "ConcurrentQueue.hpp"
 
 #include <iostream>
 #include <string>
@@ -50,8 +50,7 @@ int main(int argc, char *argv[])
     // Publisher thread
     std::thread publisherThread(
         [&_queue]()
-        { initPublisherThread(_queue); }
-    );
+        { initPublisherThread(_queue); });
 
     std::cout << "Threads created, listening for output\n";
 
@@ -112,8 +111,8 @@ int initReaderThread(cq_string_t &_queue, csv_row_t const &row)
 
 int initPublisherThread(cq_string_t &_queue)
 {
-    char *rabbitMqUri = std::getenv("STATUS_WATCHDOG_RABBITMQ_URI");
-    char *rabbitMqRoutingKey = std::getenv("STATUS_WATCHDOG_RABBITMQ_ROUTING_KEY");
+    char *rabbitMqUri = std::getenv("KGSM_RABBITMQ_URI");
+    char *rabbitMqRoutingKey = std::getenv("KGSM_RABBITMQ_ROUTING_KEY");
 
     if (rabbitMqUri == NULL || rabbitMqRoutingKey == NULL)
     {

@@ -1,9 +1,10 @@
 {
     "makefile.launchConfigurations": [
         {
-            "cwd": "/home/cristian/Repos/kgsm-watchdog/output",
-            "binaryPath": "/home/cristian/Repos/kgsm-watchdog/output/main",
+            "cwd": "/opt/kgsm-watchdog/temp/bin",
+            "binaryPath": "/opt/kgsm-watchdog/temp/bin/main",
             "binaryArgs": []
         }
-    ]
+    ],
+    "C_Cpp.default.compilerPath": "/usr/bin/clang"
 }
